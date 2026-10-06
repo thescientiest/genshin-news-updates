@@ -21,13 +21,6 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from datetime import datetime
 
-# Optional dotenv support
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
-
 # Paths configuration
 BASE_DIR = Path(__file__).resolve().parent
 ROOT_DIR = BASE_DIR.parent
@@ -35,6 +28,14 @@ DATA_DIR = BASE_DIR / "data"
 PROCESSED_FILE = DATA_DIR / "processed.json"
 GLOSSARY_FILE = DATA_DIR / "glossary.json"
 ARTICLES_DIR = ROOT_DIR / "src" / "content" / "articles"
+
+# Optional dotenv support (load both pipeline/.env and root .env)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env")
+    load_dotenv(ROOT_DIR / ".env")
+except ImportError:
+    pass
 
 # Default channel ID for @GenshinImpact
 DEFAULT_CHANNEL_ID = "UCiS882YPwZt1NfaM0gR0D9Q"
@@ -347,7 +348,7 @@ title: "{clean_article_title}"
 date: {video['published']}
 videoId: "{video['video_id']}"
 tags: {tags_formatted}
-draft: true
+draft: false
 ---
 """
     

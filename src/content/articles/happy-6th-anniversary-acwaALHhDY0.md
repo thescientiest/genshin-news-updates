@@ -3,7 +3,7 @@ title: "Happy 6th Anniversary!"
 date: 2026-09-28T08:00:15+00:00
 videoId: "acwaALHhDY0"
 tags: ["Genshin Impact", "AnniversaryMemoriesAlbum"]
-draft: true
+draft: false
 ---
 
 ## Summary
