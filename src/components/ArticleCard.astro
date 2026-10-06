@@ -1,0 +1,103 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  slug: string;
+  tags: string[];
+}
+
+const { title, date, slug, tags } = Astro.props;
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+}).format(date);
+---
+
+<article class="article-card">
+  <div class="card-meta">
+    <time datetime={date.toISOString()}>{formattedDate}</time>
+    <div class="tags-list">
+      {tags.slice(0, 3).map((tag) => (
+        <a href={`/tags/${encodeURIComponent(tag.toLowerCase())}`} class="badge">
+          {tag}
+        </a>
+      ))}
+    </div>
+  </div>
+  <h2 class="card-title">
+    <a href={`/articles/${slug}`}>{title}</a>
+  </h2>
+  <div class="card-action">
+    <a href={`/articles/${slug}`} class="read-more">
+      Read Breakdown & Watch <span>→</span>
+    </a>
+  </div>
+</article>
+
+<style>
+  .article-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .article-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12);
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .tags-list {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .card-title a {
+    color: var(--text-primary);
+  }
+
+  .card-title a:hover {
+    color: var(--gold-light);
+  }
+
+  .card-action {
+    margin-top: 0.5rem;
+  }
+
+  .read-more {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .read-more:hover {
+    color: #ffffff;
+    gap: 0.4rem;
+  }
+</style>

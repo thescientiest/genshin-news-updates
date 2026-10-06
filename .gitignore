@@ -1,0 +1,20 @@
+# Build & Cache
+dist/
+.astro/
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+# Python cache & virtual environment
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

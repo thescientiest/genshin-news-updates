@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+// Fetch all articles and filter out drafts (draft: true)
+const publishedArticles = await getCollection('articles', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Sort newest first
+publishedArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Latest Genshin Impact News & Breakdowns">
+  <section class="hero-section">
+    <div class="hero-badge">✦ Automated Dispatch Feed</div>
+    <h1 class="hero-title">Official Genshin Impact Dispatches</h1>
+    <p class="hero-subtitle">
+      Automated articles, story cutscene breakdowns, and event analysis generated directly from official 
+      <a href="https://www.youtube.com/@GenshinImpact" target="_blank" rel="noopener noreferrer">@GenshinImpact</a> YouTube uploads.
+    </p>
+  </section>
+
+  <section class="articles-section">
+    <div class="section-header">
+      <h2>Published Articles</h2>
+      <span class="count-badge">{publishedArticles.length} Available</span>
+    </div>
+
+    {publishedArticles.length > 0 ? (
+      <div class="articles-grid">
+        {publishedArticles.map((article) => (
+          <ArticleCard
+            title={article.data.title}
+            date={article.data.date}
+            slug={article.slug}
+            tags={article.data.tags}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-icon">📜</div>
+        <h3>No Published Articles Yet</h3>
+        <p>
+          New articles are currently saved with <code>draft: true</code> for editorial review. 
+          To publish an article, set <code>draft: false</code> in the Markdown front matter!
+        </p>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-section {
+    text-align: center;
+    padding: 2rem 0 3.5rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 9999px;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ffffff 40%, var(--gold-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .articles-section {
+    margin-top: 1rem;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .section-header h2 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+  }
+
+  .count-badge {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .articles-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3.5rem 2rem;
+    background-color: var(--bg-card);
+    border: 1px dashed var(--border-color);
+    border-radius: 12px;
+  }
+
+  .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  .empty-state p {
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 0.95rem;
+  }
+
+  .empty-state code {
+    background-color: rgba(15, 23, 42, 0.8);
+    color: var(--gold-light);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+  }
+</style>

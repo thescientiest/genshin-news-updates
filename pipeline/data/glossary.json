@@ -1,0 +1,74 @@
+{
+  "nations": [
+    "Mondstadt",
+    "Liyue",
+    "Inazuma",
+    "Sumeru",
+    "Fontaine",
+    "Natlan",
+    "Snezhnaya",
+    "Khaenri'ah",
+    "Celestia"
+  ],
+  "elements": [
+    "Anemo",
+    "Geo",
+    "Electro",
+    "Dendro",
+    "Hydro",
+    "Pyro",
+    "Cryo"
+  ],
+  "factions_and_organizations": [
+    "Knights of Favonius",
+    "Liyue Qixing",
+    "Fatui (and the Eleven Fatui Harbingers)",
+    "Abyss Order",
+    "Akademiya",
+    "Maison Gardiennage",
+    "Tribes of Natlan (Children of Echoes, Scions of the Canopy, People of the Springs, Masters of Night-Wind, Flower-Feather Clan, Collective of Plenty)",
+    "Adventurers' Guild"
+  ],
+  "harbingers": [
+    "Pierro (The Jester)",
+    "Il Capitano (The Captain)",
+    "Il Dottore (The Doctor)",
+    "Columbina (Damselette)",
+    "Arlecchino (The Knave / Father)",
+    "Pulcinella (The Rooster)",
+    "Scaramouche (The Balladeer / Wanderer)",
+    "Sandrone (Marionette)",
+    "La Signora (The Fair Lady)",
+    "Pantalone (Regrator)",
+    "Tartaglia (Childe)"
+  ],
+  "archons": [
+    "Barbatos (Venti) - Anemo Archon",
+    "Morax / Rex Lapis (Zhongli) - Geo Archon",
+    "Beelzebul / Raiden Shogun (Ei) - Electro Archon",
+    "Buer / Lesser Lord Kusanali (Nahida) - Dendro Archon",
+    "Focalors (Furina) - Hydro Archon",
+    "Habrym / Mavuika - Pyro Archon",
+    "Tsaritsa - Cryo Archon"
+  ],
+  "core_gameplay_terms": [
+    "Primogem",
+    "Genesis Crystal",
+    "Intertwined Fate",
+    "Acquaint Fate",
+    "Original Resin",
+    "Condensed Resin",
+    "Spiral Abyss",
+    "Imaginarium Theater",
+    "Constellation",
+    "Elemental Skill",
+    "Elemental Burst",
+    "Elemental Reaction (Vaporize, Melt, Swirl, Crystallize, Electro-Charged, Overloaded, Superconduct, Frozen, Bloom, Hyperbloom, Burgeon, Quicken, Aggravate, Spread)",
+    "Artifacts",
+    "Talents",
+    "Arkhe (Ousia and Pneuma)",
+    "Nightsoul's Blessing",
+    "Phlogiston",
+    "Saurian"
+  ]
+}
