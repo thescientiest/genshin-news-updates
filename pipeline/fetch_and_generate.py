@@ -236,7 +236,11 @@ def generate_article_with_gemini(api_key: str, user_prompt: str) -> dict:
     
     with urllib.request.urlopen(req, timeout=30) as resp:
         result = json.loads(resp.read().decode("utf-8"))
-        text = result["candidates"][0]["content"]["parts"][0]["text"]
+        text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
+        # Strip potential markdown fences if returned
+        if text.startswith("```"):
+            text = re.sub(r"^```(?:json)?\s*", "", text)
+            text = re.sub(r"\s*```$", "", text)
         return json.loads(text)
 
 def generate_article_offline_fallback(video: dict, content: str, content_type: str, glossary: dict) -> dict:
