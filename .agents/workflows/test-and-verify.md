@@ -15,4 +15,4 @@ description: Runs the automated test suite, boots the dev server, and performs v
 3. **Live Verification:**
    - If the task includes API or UI changes, launch the local development server.
    - Use `/browser` to open the local route, check HTTP status codes, and verify the UI renders without console errors.
-   - Generate a summary artifact detailing test results and browser validation.
+- Generate a summary artifact detailing test results and browser validation.    

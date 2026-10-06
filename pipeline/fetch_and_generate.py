@@ -29,13 +29,26 @@ PROCESSED_FILE = DATA_DIR / "processed.json"
 GLOSSARY_FILE = DATA_DIR / "glossary.json"
 ARTICLES_DIR = ROOT_DIR / "src" / "content" / "articles"
 
-# Optional dotenv support (load both pipeline/.env and root .env)
-try:
-    from dotenv import load_dotenv
-    load_dotenv(BASE_DIR / ".env")
-    load_dotenv(ROOT_DIR / ".env")
-except ImportError:
-    pass
+def load_env_file(path: Path):
+    if not path.exists():
+        return
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                k, v = line.split("=", 1)
+                k = k.strip()
+                v = v.strip().strip("'\"")
+                if k and v and k not in os.environ:
+                    os.environ[k] = v
+    except Exception:
+        pass
+
+# Load both pipeline/.env and root .env
+load_env_file(BASE_DIR / ".env")
+load_env_file(ROOT_DIR / ".env")
 
 # Default channel ID for @GenshinImpact
 DEFAULT_CHANNEL_ID = "UCiS882YPwZt1NfaM0gR0D9Q"
@@ -217,7 +230,7 @@ CRITICAL INSTRUCTIONS:
 
 def generate_article_with_gemini(api_key: str, user_prompt: str) -> dict:
     """Generate article using Google Gemini API (free tier available)."""
-    model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     
     payload = {
@@ -333,9 +346,9 @@ def save_article_as_markdown(video: dict, article_data: dict) -> Path:
     """Save article as Markdown with front matter."""
     ARTICLES_DIR.mkdir(parents=True, exist_ok=True)
     
-    clean_article_title = clean_text(article_data.get("title", video["title"]))
-    clean_article_title = clean_article_title.replace('"', '\\"')
-    slug = f"{slugify(clean_article_title)}-{video['video_id']}"
+    raw_title = clean_text(article_data.get("title", video["title"]))
+    slug = f"{slugify(raw_title)}-{video['video_id']}"
+    clean_article_title = raw_title.replace('"', '\\"')
     file_path = ARTICLES_DIR / f"{slug}.md"
     
     # Format tags
@@ -405,9 +418,8 @@ def run_pipeline(limit: int = 3):
     print(f"Previously processed: {len(processed_ids)} videos")
     
     all_videos = fetch_channel_feed(channel_id)
+    # YouTube feed is ordered newest first; process newest uploads first
     unprocessed = [v for v in all_videos if v["video_id"] not in processed_ids]
-    # Reverse so oldest new video is processed first
-    unprocessed.reverse()
     
     if not unprocessed:
         print("No new videos to process. Everything up to date!")
