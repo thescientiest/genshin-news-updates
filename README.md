@@ -1,121 +1,91 @@
-# ✦ Teyvat Chronicle - Automated Genshin Impact News Hub
+# ✦ Teyvat Chronicle - Dynamic Genshin Impact News Platform
 
-An automated fan website that converts new video uploads from the official [@GenshinImpact](https://www.youtube.com/@GenshinImpact) YouTube channel into structured news articles and community breakdowns.
+A server-rendered, dynamic web application built with **Next.js (App Router)** and **PostgreSQL (Neon)** that automatically transforms official [@GenshinImpact](https://www.youtube.com/@GenshinImpact) YouTube uploads into rich news articles using **Google Gemini 2.5 Flash**.
 
 ## 🌟 Tech Stack
 
-- **Pipeline**: Python (RSS Parser, `youtube-transcript-api`, Gemini/Fallback generator)
-- **Website**: [Astro](https://astro.build) (Static Site Generation, mobile-first, zero-JS by default)
-- **Content**: Markdown with YAML front matter (`src/content/articles/`)
+- **Frontend**: [Next.js (App Router)](https://nextjs.org) (Server-rendered, dynamic SQL queries)
+- **Database**: PostgreSQL on [Neon](https://neon.tech) (Connection pooling, auto-scaling)
+- **AI Engine**: Google Gemini 2.5 Flash (Grounded with curated Teyvat lore glossary)
+- **Data Pipeline**: Python 3 (`psycopg2-binary`, `youtube-transcript-api`, `google-generativeai`)
 - **Automation**: GitHub Actions (runs every 15 minutes)
-- **Hosting**: Cloudflare Pages (free, global edge CDN)
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Architecture
 
 ```text
 .
-├── .github/
-│   └── workflows/
-│       └── update-articles.yml   # Runs pipeline every 15 minutes on GitHub
+├── database/
+│   ├── schema.sql                 # PostgreSQL table definition & composite indexes
+│   └── init_db.py                 # Schema setup & data migration tool
 ├── pipeline/
 │   ├── data/
-│   │   ├── glossary.json         # Genshin lore & character terminology
-│   │   └── processed.json        # Tracks processed YouTube video IDs
-│   ├── .env                      # Local environment configuration
-│   ├── fetch_and_generate.py     # Main Python pipeline
-│   └── requirements.txt          # Python dependencies
+│   │   └── glossary.json          # Curated Genshin terminology reference
+│   ├── fetch_and_generate.py      # RSS -> Subtitles -> Gemini -> PostgreSQL
+│   └── requirements.txt           # Python pipeline dependencies
 ├── src/
-│   ├── content/
-│   │   ├── config.ts             # Article schema definition
-│   │   └── articles/             # Generated Markdown articles
+│   ├── app/
+│   │   ├── layout.tsx             # Root layout with Genshin celestial theme
+│   │   ├── page.tsx               # Homepage (Page 1 of published articles)
+│   │   ├── page/[n]/page.tsx      # Dynamic paginated routes (/page/2, /page/3...)
+│   │   ├── articles/[slug]/       # Full article view with 16:9 YouTube embed
+│   │   ├── tags/[tag]/page.tsx    # Paginated category tag archive
+│   │   ├── admin/                 # Editorial Review Dashboard
+│   │   │   ├── page.tsx
+│   │   │   └── AdminDashboardClient.tsx
+│   │   ├── api/admin/toggle-status/ # API to toggle published/draft status
+│   │   ├── about/page.tsx         # About page & attribution
+│   │   └── not-found.tsx          # 404 handler for invalid pages
 │   ├── components/
-│   │   ├── ArticleCard.astro     # Feed card component
-│   │   └── VideoEmbed.astro      # YouTube embed with attribution link
-│   ├── layouts/
-│   │   └── BaseLayout.astro      # Master layout with Genshin-inspired theme
-│   └── pages/
-│       ├── index.astro           # Homepage (latest published articles)
-│       ├── articles/[...slug].astro # Full article view
-│       ├── tags/                 # Tag archive & categories
-│       └── about.astro           # About & legal attribution
-├── astro.config.mjs
+│   │   ├── ArticleCard.tsx        # 16:9 thumbnail preview card
+│   │   ├── Pagination.tsx         # Page numbers, Prev/Next buttons
+│   │   └── VideoEmbed.tsx         # YouTube player with official channel credit
+│   └── lib/
+│       ├── db.ts                  # PostgreSQL pool client (pg)
+│       └── config.ts              # Global constants (PAGE_SIZE = 12)
 └── package.json
 ```
 
 ---
 
-## 🚀 Getting Started Locally
+## 🚀 Running Locally
 
-### 1. Run the Python Pipeline
-
-Generate articles from the latest YouTube videos:
-
-```bash
-# Run the pipeline (fetches up to 3 new videos by default)
-python3 pipeline/fetch_and_generate.py
+### 1. Configure `.env`
+Ensure your `.env` contains your Gemini API key and Neon Database URL:
+```ini
+YOUTUBE_CHANNEL_ID=UCiS882YPwZt1NfaM0gR0D9Q
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-2.5-flash
+DATABASE_URL=postgresql://user:password@ep-xyz.us-east-1.aws.neon.tech/neondb?sslmode=require
 ```
 
-- If you have a Google Gemini API key (free at [Google AI Studio](https://aistudio.google.com/)), add it to `pipeline/.env`:
-  ```ini
-  GEMINI_API_KEY=your_key_here
-  ```
-- If no key is provided, the pipeline automatically uses its built-in **grounded offline extractor**, ensuring it never fails.
-
-### 2. Run the Astro Website
-
-Start the local development preview:
-
+### 2. Run the Next.js Web App
 ```bash
 npm run dev
 ```
+Open **[http://localhost:4321](http://localhost:4321)**.
 
-Visit `http://localhost:4321` in your browser.
-
----
-
-## ✍️ Publishing Drafts
-
-Newly generated articles are created with `draft: true` in their Markdown front matter:
-
-```yaml
----
-title: "Happy 6th Anniversary!"
-date: 2026-09-28T08:00:15+00:00
-videoId: "acwaALHhDY0"
-tags: ["Genshin Impact", "AnniversaryMemoriesAlbum"]
-draft: true
----
-```
-
-When you are ready to publish an article on the homepage and tag pages, change:
-```yaml
-draft: false
+### 3. Run the Pipeline Script Manually
+```bash
+python3 pipeline/fetch_and_generate.py 3
 ```
 
 ---
 
-## ☁️ Deploying to Cloudflare Pages (Free)
+## ⚡ Deployment & Hosting
 
-1. Push your repository to **GitHub**.
-2. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com/) and go to **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**.
-3. Select your GitHub repository.
-4. Set the **Build settings**:
-   - **Framework preset**: `Astro`
-   - **Build command**: `npm run build`
-   - **Build output directory**: `dist`
-5. Click **Save and Deploy**. Cloudflare will build and host your site on a free `*.pages.dev` domain!
+### 1. Database (Neon)
+Your database is hosted on Neon PostgreSQL with composite indexes:
+- `(status, video_published_at DESC)` for instantaneous feed queries.
+- `slug` for article lookups.
+- `GIN(tags)` for tag queries.
 
----
+### 2. GitHub Actions Automation (Every 15 min)
+In your GitHub Repository > **Settings** > **Secrets and variables** > **Actions**:
+- `GEMINI_API_KEY`: Your Gemini API key.
+- `DATABASE_URL`: Your Neon PostgreSQL connection string.
 
-## ⚡ GitHub Actions Automation (Every 15 min)
-
-The repository includes [.github/workflows/update-articles.yml](file:///.github/workflows/update-articles.yml).
-
-To enable it:
-1. Go to your GitHub repository > **Settings** > **Actions** > **General**.
-2. Under **Workflow permissions**, select **Read and write permissions** (allows the bot to commit new articles).
-3. (Optional) Go to **Settings** > **Secrets and variables** > **Actions** and add:
-   - `GEMINI_API_KEY`: Your free Gemini API key.
-   - `YOUTUBE_CHANNEL_ID`: `UCiS882YPwZt1NfaM0gR0D9Q` (defaults to @GenshinImpact).
+### 3. Web Hosting (AWS Amplify / Vercel / Cloudflare)
+Deploy this Next.js app to **AWS Amplify** or **Vercel** with zero configuration:
+- Add the environment variable `DATABASE_URL` in the hosting dashboard.
