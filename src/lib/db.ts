@@ -22,6 +22,10 @@ declare global {
 
 const dbUrl = process.env.DATABASE_URL;
 
+if (!dbUrl) {
+  console.error('❌ CRITICAL: process.env.DATABASE_URL is undefined! Please ensure DATABASE_URL is set in environment variables and redeploy.');
+}
+
 export const pool =
   global._pgPool ||
   new Pool({
