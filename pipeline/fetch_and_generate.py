@@ -480,12 +480,12 @@ def process_single_video(video: dict, glossary: dict) -> bool:
     thumbnail_url = resolve_best_thumbnail(video_id)
 
     # Step 6: Insert into PostgreSQL (auto-publish)
-    if insert_to_database(video, article_data, slug, thumbnail_url):
+    inserted_db = insert_to_database(video, article_data, slug, thumbnail_url)
+    if inserted_db:
         print(f"  [Database] Inserted into PostgreSQL (status='published')")
-
-    # Save Markdown file as backup
-    output_file = save_article_as_markdown(video, article_data)
-    print(f"  [Created] Markdown backup: {output_file.relative_to(ROOT_DIR)}")
+    else:
+        output_file = save_article_as_markdown(video, article_data)
+        print(f"  [Created] Markdown backup: {output_file.relative_to(ROOT_DIR)}")
     
     # Step 7: Update processed.json
     save_processed_id(video_id)

@@ -1,4 +1,4 @@
-name: Update YouTube Articles Pipeline
+name: Update YouTube Articles Pipeline (Silent Database Worker)
 
 on:
   schedule:
@@ -6,17 +6,12 @@ on:
     - cron: '*/15 * * * *'
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
-permissions:
-  contents: write
-
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,25 +24,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r pipeline/requirements.txt
 
-      - name: Execute Pipeline Script
+      - name: Execute Pipeline (Insert Directly into PostgreSQL)
         env:
           YOUTUBE_CHANNEL_ID: ${{ secrets.YOUTUBE_CHANNEL_ID || 'UCiS882YPwZt1NfaM0gR0D9Q' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           python pipeline/fetch_and_generate.py 5
-
-      - name: Commit and Push New Articles
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # Check if there are changes in src/content/articles or pipeline/data
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Changes detected. Staging and committing..."
-            git add src/content/articles/ pipeline/data/processed.json
-            git commit -m "chore(auto): add new articles from YouTube feed [skip ci]" || exit 0
-            git push
-          else
-            echo "No new articles to commit."
-          fi
