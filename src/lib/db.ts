@@ -20,16 +20,21 @@ declare global {
   var _pgPool: Pool | undefined;
 }
 
-const dbUrl = process.env.DATABASE_URL;
+const rawDbUrl = process.env.DATABASE_URL;
 
-if (!dbUrl) {
+if (!rawDbUrl) {
   console.error('❌ CRITICAL: process.env.DATABASE_URL is undefined! Please ensure DATABASE_URL is set in environment variables and redeploy.');
 }
+
+// Strip sslmode parameter so pg doesn't override rejectUnauthorized: false with strict verification
+const connectionString = rawDbUrl
+  ? rawDbUrl.replace(/([?&])sslmode=[^&]+(&|$)/, '$1').replace(/[?&]$/, '')
+  : undefined;
 
 export const pool =
   global._pgPool ||
   new Pool({
-    connectionString: dbUrl,
+    connectionString,
     ssl: {
       rejectUnauthorized: false,
     },
