@@ -37,6 +37,13 @@ def init_schema(conn):
     conn.commit()
     print("✓ Schema initialized successfully (tables and indexes created).")
 
+def clean_str(text: str) -> str:
+    if not text:
+        return ""
+    text = text.replace('\\"', '"').replace("\\'", "'")
+    text = text.replace('\\u00a0', ' ').replace('\u00a0', ' ')
+    return text.strip()
+
 def parse_markdown_article(file_path: Path) -> dict:
     """Parse front matter and body from an existing markdown article."""
     content = file_path.read_text(encoding="utf-8")
@@ -59,18 +66,18 @@ def parse_markdown_article(file_path: Path) -> dict:
                 except Exception:
                     meta["tags"] = ["Genshin Impact"]
             else:
-                meta[k] = v
+                meta[k] = clean_str(v)
                 
-    title = meta.get("title", file_path.stem)
+    title = clean_str(meta.get("title", file_path.stem))
     video_id = meta.get("videoId", "")
     date_str = meta.get("date", "2026-10-06T00:00:00+00:00")
-    tags = meta.get("tags", ["Genshin Impact"])
+    tags = [clean_str(t) for t in meta.get("tags", ["Genshin Impact"])]
     
     # Parse Summary
     summary = ""
     summary_match = re.search(r"## Summary\s*\n\n(.*?)(?=\n\n##|$)", body_raw, re.DOTALL)
     if summary_match:
-        summary = summary_match.group(1).strip()
+        summary = clean_str(summary_match.group(1))
         
     # Parse Key Takeaways
     takeaways = []
@@ -79,15 +86,15 @@ def parse_markdown_article(file_path: Path) -> dict:
         for line in takeaways_match.group(1).split("\n"):
             line = line.strip()
             if line.startswith("- "):
-                takeaways.append(line[2:].strip())
+                takeaways.append(clean_str(line[2:]))
                 
     # Parse Body ("What This Means for Players")
     body = ""
     body_match = re.search(r"## What This Means for Players\s*\n\n(.*)", body_raw, re.DOTALL)
     if body_match:
-        body = body_match.group(1).strip()
+        body = clean_str(body_match.group(1))
     else:
-        body = body_raw
+        body = clean_str(body_raw)
 
     slug = file_path.stem
     thumbnail_url = f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg" if video_id else ""

@@ -224,9 +224,13 @@ def get_video_content(video: dict) -> tuple[str, str]:
 import unicodedata
 
 def clean_text(text: str) -> str:
-    """Normalize unicode and strip weird spaces."""
+    """Normalize unicode, strip escaped quotes, and normalize whitespace."""
     if not text:
         return ""
+    # Unescape literal backslashes before quotes
+    text = text.replace('\\"', '"').replace("\\'", "'")
+    # Replace literal or unicode non-breaking spaces
+    text = text.replace('\\u00a0', ' ').replace('\u00a0', ' ')
     normalized = unicodedata.normalize("NFKC", text)
     return normalized.strip()
 

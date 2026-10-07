@@ -1,5 +1,5 @@
 ---
-title: "Snezhnaya's \"A Winter Night's Aria\" Opera Kicks Off Cultural Co-Creation Series"
+title: 'Snezhnaya''s "A Winter Night''s Aria" Opera Kicks Off Cultural Co-Creation Series'
 date: 2026-09-29T10:05:36+00:00
 videoId: "0lcI9ZXq6ps"
 tags: ["Genshin Impact", "Snezhnaya", "Lore", "Cultural Event", "A Winter Night's Aria", "HoYoverse", "Stories of Frost Snow"]

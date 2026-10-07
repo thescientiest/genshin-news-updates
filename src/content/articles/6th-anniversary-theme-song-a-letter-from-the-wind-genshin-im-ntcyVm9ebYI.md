@@ -1,5 +1,5 @@
 ---
-title: "6th\u00a0Anniversary\u00a0Theme\u00a0Song:\u00a0\"A\u00a0Letter\u00a0From\u00a0the\u00a0Wind\"\u00a0|\u00a0Genshin\u00a0Impact"
+title: '6th Anniversary Theme Song: "A Letter From the Wind" | Genshin Impact'
 date: 2026-09-28T04:00:21+00:00
 videoId: "ntcyVm9ebYI"
 tags: ["Genshin Impact", "Anniversary", "Music"]

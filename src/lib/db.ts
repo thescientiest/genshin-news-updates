@@ -47,6 +47,23 @@ if (process.env.NODE_ENV !== 'production') {
   global._pgPool = pool;
 }
 
+function sanitizeRow(row: any): any {
+  if (typeof row === 'string') {
+    return row.replace(/\\"/g, '"').replace(/\\'/g, "'").replace(/\\u00a0/g, ' ');
+  }
+  if (Array.isArray(row)) {
+    return row.map(sanitizeRow);
+  }
+  if (row && typeof row === 'object' && !(row instanceof Date)) {
+    const cleaned: any = {};
+    for (const [key, value] of Object.entries(row)) {
+      cleaned[key] = sanitizeRow(value);
+    }
+    return cleaned;
+  }
+  return row;
+}
+
 export async function query<T = any>(text: string, params?: any[]): Promise<T[]> {
   let attempts = 0;
   const maxAttempts = 2;
@@ -57,7 +74,7 @@ export async function query<T = any>(text: string, params?: any[]): Promise<T[]>
       const client = await pool.connect();
       try {
         const res = await client.query(text, params);
-        return res.rows;
+        return res.rows.map(sanitizeRow) as T[];
       } finally {
         client.release();
       }

@@ -1,5 +1,5 @@
 ---
-title: "The \"Seal of Life\" Cutscene Reveals Snezhnayan Conflict and a Royal Intervention"
+title: 'The "Seal of Life" Cutscene Reveals Snezhnayan Conflict and a Royal Intervention'
 date: 2026-10-06T04:00:14+00:00
 videoId: "rEoZ_t5oBmQ"
 tags: ["Genshin Impact", "Snezhnaya", "Cutscene", "Lore", "Tsaritsa", "Vesna", "Seal of Life"]
