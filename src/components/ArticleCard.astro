@@ -4,34 +4,57 @@ interface Props {
   date: Date;
   slug: string;
   tags: string[];
+  videoId?: string;
 }
 
-const { title, date, slug, tags } = Astro.props;
+const { title, date, slug, tags, videoId } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',
   day: 'numeric',
 }).format(date);
+
+const thumbnailUrl = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
 ---
 
 <article class="article-card">
-  <div class="card-meta">
-    <time datetime={date.toISOString()}>{formattedDate}</time>
-    <div class="tags-list">
-      {tags.slice(0, 3).map((tag) => (
-        <a href={`/tags/${encodeURIComponent(tag.toLowerCase())}`} class="badge">
-          {tag}
-        </a>
-      ))}
-    </div>
-  </div>
-  <h2 class="card-title">
-    <a href={`/articles/${slug}`}>{title}</a>
-  </h2>
-  <div class="card-action">
-    <a href={`/articles/${slug}`} class="read-more">
-      Read Breakdown & Watch <span>→</span>
+  {thumbnailUrl && (
+    <a href={`/articles/${slug}`} class="thumbnail-link" tabindex="-1" aria-hidden="true">
+      <div class="thumbnail-wrapper">
+        <img
+          src={thumbnailUrl}
+          alt={`Thumbnail for ${title}`}
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="play-overlay">
+          <span class="play-icon">▶</span>
+        </div>
+      </div>
     </a>
+  )}
+
+  <div class="card-content">
+    <div class="card-meta">
+      <time datetime={date.toISOString()}>{formattedDate}</time>
+      <div class="tags-list">
+        {tags.slice(0, 3).map((tag) => (
+          <a href={`/tags/${encodeURIComponent(tag.toLowerCase())}`} class="badge">
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <h2 class="card-title">
+      <a href={`/articles/${slug}`}>{title}</a>
+    </h2>
+
+    <div class="card-action">
+      <a href={`/articles/${slug}`} class="read-more">
+        Read Breakdown & Watch <span>→</span>
+      </a>
+    </div>
   </div>
 </article>
 
@@ -39,18 +62,90 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
   .article-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 14px;
+    padding: 1.25rem;
     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: stretch;
   }
 
   .article-card:hover {
     transform: translateY(-2px);
     border-color: var(--gold);
-    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.14);
+  }
+
+  .thumbnail-link {
+    flex-shrink: 0;
+    width: 260px;
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 146px;
+    aspect-ratio: 16 / 9;
+    background-color: #030712;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .thumbnail-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+    display: block;
+  }
+
+  .article-card:hover .thumbnail-wrapper img {
+    transform: scale(1.06);
+  }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 17, 32, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .article-card:hover .play-overlay {
+    opacity: 1;
+  }
+
+  .play-icon {
+    width: 38px;
+    height: 38px;
+    background: rgba(245, 158, 11, 0.9);
+    color: #0b1120;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.6);
+    padding-left: 2px;
+  }
+
+  .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-width: 0;
   }
 
   .card-meta {
@@ -71,12 +166,17 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 
   .card-title {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.4;
+    margin: 0.2rem 0 auto;
   }
 
   .card-title a {
     color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .card-title a:hover {
@@ -89,15 +189,32 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 
   .read-more {
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--gold);
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.3rem;
   }
 
   .read-more:hover {
     color: #ffffff;
-    gap: 0.4rem;
+    gap: 0.5rem;
+  }
+
+  /* Responsive Mobile Layout */
+  @media (max-width: 680px) {
+    .article-card {
+      flex-direction: column;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .thumbnail-link {
+      width: 100%;
+    }
+
+    .thumbnail-wrapper {
+      min-height: auto;
+    }
   }
 </style>

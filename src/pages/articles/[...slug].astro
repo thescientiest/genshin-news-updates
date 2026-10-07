@@ -21,7 +21,10 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 }).format(article.data.date);
 ---
 
-<BaseLayout title={article.data.title}>
+<BaseLayout 
+  title={article.data.title}
+  image={`https://i.ytimg.com/vi/${article.data.videoId}/hqdefault.jpg`}
+>
   <article class="article-detail">
     <div class="back-nav">
       <a href="/" class="back-link">← Back to All Articles</a>
