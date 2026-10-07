@@ -25,7 +25,7 @@ export default function Pagination({
   return (
     <nav className="pagination-container" aria-label="Article navigation">
       {currentPage > 1 ? (
-        <Link href={getPageUrl(currentPage - 1)} className="page-btn prev-btn">
+        <Link href={getPageUrl(currentPage - 1)} prefetch={false} className="page-btn prev-btn">
           ← Previous
         </Link>
       ) : (
@@ -40,7 +40,7 @@ export default function Pagination({
               {p}
             </span>
           ) : (
-            <Link key={p} href={getPageUrl(p)} className="page-number">
+            <Link key={p} href={getPageUrl(p)} prefetch={false} className="page-number">
               {p}
             </Link>
           );
@@ -48,7 +48,7 @@ export default function Pagination({
       </div>
 
       {currentPage < totalPages ? (
-        <Link href={getPageUrl(currentPage + 1)} className="page-btn next-btn">
+        <Link href={getPageUrl(currentPage + 1)} prefetch={false} className="page-btn next-btn">
           Next →
         </Link>
       ) : (

@@ -20,6 +20,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     <article className="article-card">
       <Link
         href={`/articles/${article.slug}`}
+        prefetch={false}
         className="thumbnail-link"
         tabIndex={-1}
         aria-hidden="true"
@@ -47,6 +48,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               <Link
                 key={tag}
                 href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}
+                prefetch={false}
                 className="badge"
               >
                 #{tag}
@@ -56,7 +58,9 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         </div>
 
         <h2 className="card-title">
-          <Link href={`/articles/${article.slug}`}>{article.title}</Link>
+          <Link href={`/articles/${article.slug}`} prefetch={false}>
+            {article.title}
+          </Link>
         </h2>
 
         {article.summary && (
@@ -64,7 +68,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         )}
 
         <div className="card-action">
-          <Link href={`/articles/${article.slug}`} className="read-more">
+          <Link href={`/articles/${article.slug}`} prefetch={false} className="read-more">
             Read Breakdown & Watch <span>→</span>
           </Link>
         </div>

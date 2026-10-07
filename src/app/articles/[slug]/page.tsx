@@ -5,7 +5,7 @@ import { query, Article } from '@/lib/db';
 import { CHANNEL_URL, CHANNEL_NAME } from '@/lib/config';
 import VideoEmbed from '@/components/VideoEmbed';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;

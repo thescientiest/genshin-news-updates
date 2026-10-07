@@ -4,7 +4,7 @@ import { PAGE_SIZE } from '@/lib/config';
 import ArticleCard from '@/components/ArticleCard';
 import Pagination from '@/components/Pagination';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 interface PageProps {
   params: Promise<{ n: string }>;
