@@ -1,6 +1,7 @@
 # Build & Cache
 dist/
 .astro/
+.next/
 node_modules/
 
 # Environment files

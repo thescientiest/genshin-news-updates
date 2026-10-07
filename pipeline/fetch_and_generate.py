@@ -53,8 +53,44 @@ load_env_file(ROOT_DIR / ".env")
 # Default channel ID for @GenshinImpact
 DEFAULT_CHANNEL_ID = "UCiS882YPwZt1NfaM0gR0D9Q"
 
+def get_db_connection():
+    """Attempt connecting to PostgreSQL if DATABASE_URL is set."""
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        return None
+    try:
+        import psycopg2
+        return psycopg2.connect(db_url)
+    except Exception as e:
+        print(f"[Warning] Could not connect to PostgreSQL: {e}")
+        return None
+
+def resolve_best_thumbnail(video_id: str) -> str:
+    """Try maxresdefault.jpg, fall back to hqdefault.jpg."""
+    maxres_url = f"https://i.ytimg.com/vi/{video_id}/maxresdefault.jpg"
+    try:
+        req = urllib.request.Request(maxres_url, headers={"User-Agent": "Mozilla/5.0"}, method="HEAD")
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            if resp.status == 200:
+                return maxres_url
+    except Exception:
+        pass
+    return f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+
 def load_processed_ids() -> set:
-    """Load previously processed video IDs from processed.json."""
+    """Load processed video IDs from PostgreSQL or fallback to processed.json."""
+    conn = get_db_connection()
+    if conn:
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT video_id FROM articles")
+                rows = cur.fetchall()
+                conn.close()
+                return set(r[0] for r in rows)
+        except Exception as e:
+            print(f"[Warning] Error querying articles table: {e}")
+            conn.close()
+
     if not PROCESSED_FILE.exists():
         return set()
     try:
@@ -386,6 +422,46 @@ draft: false
         
     return file_path
 
+def insert_to_database(video: dict, article_data: dict, slug: str, thumbnail_url: str) -> bool:
+    """Insert article row into PostgreSQL with status = 'published' (auto-publish)."""
+    conn = get_db_connection()
+    if not conn:
+        return False
+    try:
+        sql = """
+        INSERT INTO articles (
+            video_id, title, slug, summary, body, key_takeaways, tags, 
+            thumbnail_url, video_published_at, status
+        ) VALUES (
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, 'published'
+        )
+        ON CONFLICT (video_id) DO UPDATE SET
+            title = EXCLUDED.title,
+            status = 'published';
+        """
+        with conn.cursor() as cur:
+            cur.execute(sql, (
+                video["video_id"],
+                clean_text(article_data.get("title", video["title"])),
+                slug,
+                clean_text(article_data.get("summary", "")),
+                clean_text(article_data.get("what_this_means_for_players", "")),
+                [clean_text(item) for item in article_data.get("key_takeaways", [])],
+                [clean_text(t) for t in article_data.get("tags", ["Genshin Impact"])],
+                thumbnail_url,
+                video["published"]
+            ))
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"  [Warning] PostgreSQL insert failed: {e}")
+        try:
+            conn.close()
+        except Exception:
+            pass
+        return False
+
 def process_single_video(video: dict, glossary: dict) -> bool:
     """Process a single video through the complete pipeline."""
     video_id = video["video_id"]
@@ -398,9 +474,18 @@ def process_single_video(video: dict, glossary: dict) -> bool:
     # Step 4 & 5: Generate article
     article_data = generate_article(video, content, content_type, glossary)
     
-    # Step 6: Save Markdown file
+    # Resolve best thumbnail and slug
+    raw_title = clean_text(article_data.get("title", video["title"]))
+    slug = f"{slugify(raw_title)}-{video['video_id']}"
+    thumbnail_url = resolve_best_thumbnail(video_id)
+
+    # Step 6: Insert into PostgreSQL (auto-publish)
+    if insert_to_database(video, article_data, slug, thumbnail_url):
+        print(f"  [Database] Inserted into PostgreSQL (status='published')")
+
+    # Save Markdown file as backup
     output_file = save_article_as_markdown(video, article_data)
-    print(f"  [Created] Article saved: {output_file.relative_to(ROOT_DIR)}")
+    print(f"  [Created] Markdown backup: {output_file.relative_to(ROOT_DIR)}")
     
     # Step 7: Update processed.json
     save_processed_id(video_id)
