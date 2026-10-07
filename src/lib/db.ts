@@ -31,6 +31,7 @@ export const pool =
     },
     max: 10,
     idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
   });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -38,11 +39,27 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export async function query<T = any>(text: string, params?: any[]): Promise<T[]> {
-  const client = await pool.connect();
-  try {
-    const res = await client.query(text, params);
-    return res.rows;
-  } finally {
-    client.release();
+  let attempts = 0;
+  const maxAttempts = 2;
+
+  while (attempts < maxAttempts) {
+    attempts++;
+    try {
+      const client = await pool.connect();
+      try {
+        const res = await client.query(text, params);
+        return res.rows;
+      } finally {
+        client.release();
+      }
+    } catch (err: any) {
+      if (attempts >= maxAttempts) {
+        console.error('Database query failed after retry:', err.message);
+        throw err;
+      }
+      console.warn(`Database connection attempt ${attempts} failed (${err.message}). Retrying in 1s...`);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
   }
+  return [];
 }
