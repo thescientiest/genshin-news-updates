@@ -62,9 +62,7 @@ def get_db_connection():
     if not DB_URL:
         return None
     try:
-        # Strip sslmode if needed or connect with require
-        clean_url = DB_URL.replace("sslmode=require", "sslmode=no-verify") if "sslmode=require" in DB_URL else DB_URL
-        return psycopg2.connect(clean_url, connect_timeout=5)
+        return psycopg2.connect(DB_URL, connect_timeout=8)
     except Exception as e:
         print(f"[DB Error] {e}")
         return None
