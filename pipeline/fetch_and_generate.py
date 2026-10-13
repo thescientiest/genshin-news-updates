@@ -494,7 +494,15 @@ def process_single_video(video: dict, glossary: dict) -> bool:
     # Step 7: Update processed.json
     save_processed_id(video_id)
     print(f"  [Updated] {video_id} recorded in processed.json")
-    
+
+    # Step 8: Broadcast newly published dispatch to Telegram
+    try:
+        sys.path.insert(0, str(BASE_DIR))
+        from telegram_notifier import send_telegram_article_broadcast
+        send_telegram_article_broadcast(article_data, slug, thumbnail_url)
+    except Exception as e:
+        print(f"  [Telegram Warning] Broadcast skipped or failed: {e}")
+
     return True
 
 def run_pipeline(limit: int = 3):
