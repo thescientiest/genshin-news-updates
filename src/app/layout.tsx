@@ -30,7 +30,6 @@ export default function RootLayout({
                 <span className="brand-text">
                   Teyvat<strong>Chronicle</strong>
                 </span>
-                <span className="header-badge">AUTO-AI</span>
               </Link>
 
               <nav className="nav-links">
@@ -38,10 +37,7 @@ export default function RootLayout({
                   Dispatches
                 </Link>
                 <Link href="/about" className="nav-link">
-                  Pipeline & About
-                </Link>
-                <Link href="/admin" className="nav-link">
-                  Admin
+                  About
                 </Link>
                 <a
                   href="https://t.me/giupdatesbot"
@@ -67,22 +63,19 @@ export default function RootLayout({
                   <span className="logo-gem">✦</span>
                   <span className="brand-text">Teyvat<strong>Chronicle</strong></span>
                 </div>
-                <div className="footer-tech-stack">
-                  <span className="tech-tag">Next.js 16</span>
-                  <span className="tech-tag">AWS RDS PostgreSQL</span>
-                  <span className="tech-tag">Google Gemini 2.5</span>
-                  <span className="tech-tag">Telegram Bot</span>
+                <div className="footer-tagline">
+                  <span>Official Genshin Impact News & Cutscene Breakdowns</span>
                 </div>
               </div>
 
               <p className="disclaimer">
-                Teyvat Chronicle is an unofficial, non-commercial fan intelligence service. Genshin Impact and all related visual assets, lore, audio, and character names are copyrighted trademarks of <strong>COGNOSPHERE PTE. LTD. (HoYoverse)</strong>.
+                Teyvat Chronicle is an unofficial, non-commercial fan project. Genshin Impact and all related visual assets, lore, audio, and character names are copyrighted trademarks of <strong>COGNOSPHERE PTE. LTD. (HoYoverse)</strong>.
               </p>
 
               <div className="footer-links">
-                <Link href="/">Headquarters</Link>
+                <Link href="/">Dispatches</Link>
                 <span>•</span>
-                <Link href="/about">How It Works</Link>
+                <Link href="/about">About This Project</Link>
                 <span>•</span>
                 <a href="https://t.me/giupdatesbot" target="_blank" rel="noopener noreferrer">
                   Telegram Bot (@giupdatesbot)

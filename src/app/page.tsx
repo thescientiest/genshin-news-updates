@@ -40,10 +40,8 @@ export default async function HomePage() {
       {/* Hero Banner */}
       <section className="hero-section">
         <div className="hero-status-pill">
-          <span className="live-dot-pulse"></span>
-          <span>Automated Ingestion Pipeline Active</span>
-          <span className="pill-divider">•</span>
-          <span className="sync-rate">Synced Every 15m</span>
+          <span className="sparkle">✦</span>
+          <span>Official Genshin Impact News & Cutscene Breakdowns</span>
         </div>
 
         <h1 className="hero-title">
@@ -51,7 +49,7 @@ export default async function HomePage() {
         </h1>
         
         <p className="hero-subtitle">
-          Real-time article synthesis, lore deep-dives, and story cutscene breakdowns grounded strictly in official YouTube broadcasts and voice transcripts.
+          Curated articles, story cutscene breakdowns, and event analysis from official broadcasts. Fast, structured, and player-focused.
         </p>
 
         {/* Quick Topic Explorer */}

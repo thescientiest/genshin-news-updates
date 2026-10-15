@@ -1,57 +1,97 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { CHANNEL_URL, CHANNEL_NAME } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'About Teyvat Chronicle',
-  description: 'Learn about the automated Genshin Impact article platform, data pipeline, and legal attributions.',
+  description: 'Learn about Teyvat Chronicle, our structured Genshin Impact dispatches, and official attributions.',
 };
 
 export default function AboutPage() {
   return (
     <div className="about-container">
       <div className="about-header">
-        <span className="badge">Fan Project</span>
+        <span className="badge">Community Fan Archive</span>
         <h1>About Teyvat Chronicle</h1>
         <p className="subtitle">
-          An automated intelligence hub turning official Genshin Impact broadcasts into structured knowledge.
+          Your dedicated editorial hub for official Genshin Impact news, cutscene breakdowns, and story analysis.
         </p>
       </div>
 
       <div className="about-content">
         <section className="info-card">
-          <h2>✦ How the Real-time Pipeline Works</h2>
+          <h2>✦ What We Provide</h2>
           <p>
-            Every 15 minutes, our automated pipeline monitors the official{' '}
-            <a href={CHANNEL_URL} target="_blank" rel="noopener noreferrer">
-              @{CHANNEL_NAME}
-            </a>{' '}
-            YouTube channel. When a new video is discovered, the pipeline:
+            <strong>Teyvat Chronicle</strong> transforms official video broadcasts into clear, searchable, mobile-friendly articles designed for players and lore enthusiasts.
           </p>
-          <ol>
-            <li>Extracts official subtitles and video metadata.</li>
-            <li>Grounds character names, Archons, and lore using our curated Teyvat glossary.</li>
-            <li>Synthesizes a structured article using Google Gemini 2.5 Flash.</li>
-            <li>Stores the article into our PostgreSQL database with instant auto-publishing!</li>
-          </ol>
+          <div className="features-grid">
+            <div className="feature-item">
+              <span className="feature-icon">📜</span>
+              <div>
+                <h3>Structured Dispatches</h3>
+                <p>Read concise summaries of trailers, animated shorts, and event announcements without having to scrub through entire videos.</p>
+              </div>
+            </div>
+
+            <div className="feature-item">
+              <span className="feature-icon">📌</span>
+              <div>
+                <h3>Key Takeaways at a Glance</h3>
+                <p>Every article features bulleted highlights detailing essential takeaways, character debuts, and event rewards.</p>
+              </div>
+            </div>
+
+            <div className="feature-item">
+              <span className="feature-icon">🔍</span>
+              <div>
+                <h3>Story & Lore Analysis</h3>
+                <p>Understand the broader narrative implications—from Snezhnayan developments to Archon lore—explained clearly for players.</p>
+              </div>
+            </div>
+
+            <div className="feature-item">
+              <span className="feature-icon">✈️</span>
+              <div>
+                <h3>Instant Telegram Alerts</h3>
+                <p>Get notified the moment a new official dispatch drops, or query our archive anytime through our interactive Telegram bot.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section className="info-card">
-          <h2>✦ Grounding & Editorial Integrity</h2>
+          <h2>✦ Connect With Us</h2>
           <p>
-            Our generation engine is strictly constrained to prevent hallucinations or speculative rumors. 
-            Articles only detail events, gameplay mechanics, and lore revelations explicitly verified in official broadcasts.
+            Follow new releases as they premiere or explore past dispatches across all regions of Teyvat:
           </p>
+          <div className="about-action-buttons">
+            <Link href="/" className="channel-button">
+              Browse Latest Dispatches
+            </Link>
+            <a
+              href="https://t.me/giupdatesbot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="channel-button telegram-sub-btn"
+            >
+              Join Telegram Alerts (@giupdatesbot)
+            </a>
+          </div>
         </section>
 
         <section className="info-card disclaimer-card">
           <h2>✦ Legal & Attribution Disclaimer</h2>
           <p>
-            <strong>Teyvat Chronicle</strong> is an unofficial, non-commercial fan-created website. 
-            Genshin Impact, characters, names, audio, and visual materials are intellectual property and copyright of{' '}
+            <strong>Teyvat Chronicle</strong> is an unofficial, non-commercial fan project created for the Genshin Impact community. 
+            All game characters, names, video footage, audio, lore concepts, and trademarks belong to{' '}
             <strong>COGNOSPHERE PTE. LTD. (HoYoverse)</strong>.
           </p>
           <p>
-            This website does not host copyrighted video files; all video players embed directly from the official YouTube broadcast.
+            All video players embed directly from the official{' '}
+            <a href={CHANNEL_URL} target="_blank" rel="noopener noreferrer">
+              @{CHANNEL_NAME}
+            </a>{' '}
+            YouTube channel to ensure all views, credits, and ad revenues remain with the original creators.
           </p>
         </section>
       </div>
