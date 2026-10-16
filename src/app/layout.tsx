@@ -1,7 +1,15 @@
+import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
 import './globals.css';
 import Link from 'next/link';
 import { SITE_NAME, SITE_DESCRIPTION, CHANNEL_URL } from '@/lib/config';
+import MobileNav from '@/components/MobileNav';
+import ScrollToTop from '@/components/ScrollToTop';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <body>
         <div className="site-wrapper">
           <header className="site-header">
@@ -51,6 +59,8 @@ export default function RootLayout({
                   <span>Telegram Alerts</span>
                 </a>
               </nav>
+
+              <MobileNav />
             </div>
           </header>
 
@@ -85,8 +95,14 @@ export default function RootLayout({
                   Official YouTube Channel ↗
                 </a>
               </div>
+
+              <p className="footer-copyright">
+                © {new Date().getFullYear()} Teyvat Chronicle — A community fan project.
+              </p>
             </div>
           </footer>
+
+          <ScrollToTop />
         </div>
       </body>
     </html>

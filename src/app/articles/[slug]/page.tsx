@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { query, Article } from '@/lib/db';
 import { CHANNEL_URL, CHANNEL_NAME } from '@/lib/config';
 import VideoEmbed from '@/components/VideoEmbed';
+import ReadingProgress from '@/components/ReadingProgress';
 
 export const revalidate = 60;
 
@@ -73,6 +74,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <article className="article-detail">
+      <ReadingProgress />
+
       {/* Breadcrumb Navigation */}
       <nav className="breadcrumb-nav" aria-label="Breadcrumb">
         <Link href="/" className="breadcrumb-link">
@@ -186,6 +189,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           </section>
         )}
+      </div>
+
+      <div className="back-nav article-back-nav">
+        <Link href="/">← Back to All Dispatches</Link>
       </div>
 
       <section className="channel-credit-box">
