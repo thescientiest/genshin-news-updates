@@ -83,23 +83,31 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
             </div>
           )}
 
-          <div className="card-footer">
-            <div className="tags-list">
-              {(article.tags || []).slice(0, 4).map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}
-                  prefetch={false}
-                  className="badge"
-                >
-                  #{tag}
-                </Link>
-              ))}
-            </div>
+          <div className="featured-footer">
+            {article.tags && article.tags.length > 0 && (
+              <div className="featured-tags-row">
+                <div className="tags-list">
+                  {article.tags.slice(0, 4).map((tag) => (
+                    <Link
+                      key={tag}
+                      href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}
+                      prefetch={false}
+                      className="badge"
+                    >
+                      #{tag}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            <Link href={`/articles/${article.slug}`} prefetch={false} className="read-more-btn">
+            <Link
+              href={`/articles/${article.slug}`}
+              prefetch={false}
+              className="featured-cta-btn read-more-btn"
+            >
               <span>Read Full Breakdown</span>
-              <span className="arrow">→</span>
+              <span className="arrow" aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
