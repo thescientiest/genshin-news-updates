@@ -35,7 +35,7 @@ def load_env():
 
 load_env()
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8986555183:AAGnCD7ou8Z0yBik2C8VKoC3HIF0CWRhwFk")
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 DB_URL = os.getenv("DATABASE_URL", "")
 SITE_URL = os.getenv("SITE_URL", "https://genshin-news-updates.vercel.app").rstrip("/")
 

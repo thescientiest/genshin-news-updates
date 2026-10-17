@@ -14,6 +14,13 @@ const WEBHOOK_SECRET = process.env.TELEGRAM_WEBHOOK_SECRET || '';
  *   Check:      GET /api/telegram/setup?action=info
  */
 export async function GET(request: NextRequest) {
+  const expectedSecret = process.env.ADMIN_SECRET || process.env.TELEGRAM_WEBHOOK_SECRET;
+  const providedSecret = request.nextUrl.searchParams.get('secret');
+
+  if (expectedSecret && providedSecret !== expectedSecret) {
+    return Response.json({ error: 'Unauthorized: invalid or missing secret parameter' }, { status: 401 });
+  }
+
   if (!BOT_TOKEN) {
     return Response.json({ error: 'TELEGRAM_BOT_TOKEN not set' }, { status: 500 });
   }
