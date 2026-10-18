@@ -7,12 +7,12 @@ import Pagination from '@/components/Pagination';
 export const revalidate = 60;
 
 const FEATURED_TOPICS = [
-  { label: 'Snezhnaya', tag: 'Snezhnaya' },
-  { label: 'Lore', tag: 'Lore' },
-  { label: 'Cutscenes', tag: 'Cutscene' },
-  { label: 'Anniversary', tag: 'Anniversary' },
-  { label: 'Music', tag: 'Music' },
-  { label: 'HoYoverse', tag: 'HoYoverse' },
+  { label: 'Snezhnaya', tag: 'Snezhnaya', descriptor: 'Archon Chapter' },
+  { label: 'Lore', tag: 'Lore', descriptor: 'Historiography' },
+  { label: 'Cutscenes', tag: 'Cutscene', descriptor: 'Cinematics' },
+  { label: 'Anniversary', tag: 'Anniversary', descriptor: 'Milestones' },
+  { label: 'Music', tag: 'Music', descriptor: 'HOYO-MiX' },
+  { label: 'HoYoverse', tag: 'HoYoverse', descriptor: 'Transmissions' },
 ];
 
 export default async function HomePage() {
@@ -37,49 +37,68 @@ export default async function HomePage() {
 
   return (
     <div className="home-layout">
-      {/* Hero Banner */}
-      <section className="hero-section">
-        <div className="hero-status-pill">
-          <span className="sparkle">✦</span>
-          <span>Official Genshin Impact News & Cutscene Breakdowns</span>
+      {/* Editorial Masthead */}
+      <section className="editorial-masthead">
+        <div className="masthead-main">
+          <div className="archival-edition-tag">
+            <span className="edition-symbol">✦</span>
+            <span>Teyvat Intelligence Record · Official Transmissions</span>
+          </div>
+
+          <h1 className="masthead-title">
+            Chronicles & Dispatches
+          </h1>
+
+          <p className="masthead-deck">
+            Authoritative records, cutscene analyses, and lore breakdowns transcribed directly from official HoYoverse broadcasts. Structured, permanent, and lore-grounded.
+          </p>
+
+          <div className="masthead-meta-strip">
+            <div className="meta-strip-item">
+              <span className="meta-label">Archive Scope</span>
+              <span className="meta-value">Teyvat Chapters I–VII</span>
+            </div>
+            <div className="meta-strip-divider" aria-hidden="true"></div>
+            <div className="meta-strip-item">
+              <span className="meta-label">Source Frequency</span>
+              <span className="meta-value">Official YouTube Feed</span>
+            </div>
+          </div>
         </div>
 
-        <h1 className="hero-title">
-          Official Genshin Impact <span className="title-gradient">Dispatches</span>
-        </h1>
-        
-        <p className="hero-subtitle">
-          Curated articles, story cutscene breakdowns, and event analysis from official broadcasts. Fast, structured, and player-focused.
-        </p>
-
-        {/* Quick Topic Explorer */}
-        <div className="topic-bar">
-          <span className="topic-bar-label">Explore Topics:</span>
-          <div className="topic-pills">
-            {FEATURED_TOPICS.map(({ label, tag }) => (
+        {/* Curated Topic Taxonomy / Registers */}
+        <aside className="masthead-sidebar">
+          <div className="taxonomy-header">
+            <span className="taxonomy-title">Dispatch Registers</span>
+            <span className="taxonomy-sub">By Category</span>
+          </div>
+          <div className="taxonomy-grid">
+            {FEATURED_TOPICS.map(({ label, tag, descriptor }) => (
               <Link
                 key={tag}
                 href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}
                 prefetch={false}
-                className="topic-pill"
+                className="taxonomy-item"
               >
-                #{label}
+                <div className="taxonomy-item-name">{label}</div>
+                <div className="taxonomy-item-meta">{descriptor}</div>
               </Link>
             ))}
           </div>
-        </div>
+        </aside>
       </section>
 
       {/* Main Articles Stream */}
       <section className="articles-section">
-        <div className="section-header">
-          <div className="section-title-wrap">
-            <span className="section-icon">✦</span>
-            <h2>Archive & Dispatches</h2>
+        <div className="section-ledger-bar">
+          <div className="ledger-title-group">
+            <span className="ledger-mark" aria-hidden="true">✦</span>
+            <h2>Archival Dispatches</h2>
           </div>
-          <span className="count-badge">
-            <strong>{totalCount}</strong> Articles Archived
-          </span>
+          <div className="ledger-counter">
+            <span className="counter-label">Cataloged Folio</span>
+            <span className="counter-value">{totalCount} Records</span>
+          </div>
         </div>
 
         {articles.length > 0 ? (
@@ -105,7 +124,7 @@ export default async function HomePage() {
             <div className="empty-icon">📜</div>
             <h3>No Published Articles Yet</h3>
             <p>
-              New dispatches are generated and auto-published automatically as official broadcasts premiere!
+              New dispatches are generated and cataloged automatically as official broadcasts premiere.
             </p>
           </div>
         )}

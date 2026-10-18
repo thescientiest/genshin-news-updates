@@ -39,22 +39,22 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
               decoding="async"
             />
             <div className="play-overlay">
-              <span className="play-icon">▶</span>
+              <span className="play-icon" aria-hidden="true">▶</span>
             </div>
-            <div className="thumbnail-badge featured-badge">✦ Spotlight Dispatch</div>
+            <div className="archival-stamp">Lead Dispatch</div>
           </div>
         </Link>
 
         <div className="card-content featured-card-content">
           <div className="card-meta">
-            <span className="read-time-pill">
-              <span className="sparkle">✦</span> Latest Official Video
+            <span className="dispatch-classification">
+              Official Broadcast
             </span>
             <div className="meta-info">
               <time dateTime={new Date(article.video_published_at).toISOString()}>
                 {formattedDate}
               </time>
-              <span className="dot-sep">•</span>
+              <span className="meta-divider">/</span>
               <span>{readMinutes} min read</span>
             </div>
           </div>
@@ -71,11 +71,11 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
 
           {article.key_takeaways && article.key_takeaways.length > 0 && (
             <div className="featured-takeaways">
-              <div className="takeaways-header">Key Highlights:</div>
+              <div className="takeaways-header">Key Archival Highlights</div>
               <ul className="takeaways-preview-list">
                 {article.key_takeaways.slice(0, 2).map((point, idx) => (
                   <li key={idx}>
-                    <span className="bullet">✦</span>
+                    <span className="bullet-glyph" aria-hidden="true">◆</span>
                     <span>{point}</span>
                   </li>
                 ))}
@@ -92,9 +92,9 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
                       key={tag}
                       href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}
                       prefetch={false}
-                      className="badge"
+                      className="tag-badge"
                     >
-                      #{tag}
+                      {tag}
                     </Link>
                   ))}
                 </div>
@@ -104,10 +104,9 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
             <Link
               href={`/articles/${article.slug}`}
               prefetch={false}
-              className="featured-cta-btn read-more-btn"
+              className="featured-action-btn"
             >
               <span>Read Full Breakdown</span>
-              <span className="arrow" aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
@@ -132,9 +131,9 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
             decoding="async"
           />
           <div className="play-overlay">
-            <span className="play-icon">▶</span>
+            <span className="play-icon" aria-hidden="true">▶</span>
           </div>
-          <div className="thumbnail-badge">Official Video</div>
+          <div className="thumbnail-badge">Archived</div>
         </div>
       </Link>
 
@@ -143,7 +142,7 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
           <time dateTime={new Date(article.video_published_at).toISOString()}>
             {formattedDate}
           </time>
-          <span className="dot-sep">•</span>
+          <span className="meta-divider">/</span>
           <span className="read-time">{readMinutes} min read</span>
         </div>
 
@@ -164,16 +163,15 @@ export default function ArticleCard({ article, featured = false }: ArticleCardPr
                 key={tag}
                 href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}
                 prefetch={false}
-                className="badge"
+                className="tag-badge"
               >
-                #{tag}
+                {tag}
               </Link>
             ))}
           </div>
 
-          <Link href={`/articles/${article.slug}`} prefetch={false} className="read-more">
-            <span>Breakdown</span>
-            <span className="arrow">→</span>
+          <Link href={`/articles/${article.slug}`} prefetch={false} className="read-more-link">
+            <span>Read Article</span>
           </Link>
         </div>
       </div>

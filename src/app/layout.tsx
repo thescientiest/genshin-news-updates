@@ -1,4 +1,4 @@
-import { Inter } from 'next/font/google';
+import { Cinzel, Plus_Jakarta_Sans } from 'next/font/google';
 import type { Metadata } from 'next';
 import './globals.css';
 import Link from 'next/link';
@@ -6,9 +6,18 @@ import { SITE_NAME, SITE_DESCRIPTION, CHANNEL_URL } from '@/lib/config';
 import MobileNav from '@/components/MobileNav';
 import ScrollToTop from '@/components/ScrollToTop';
 
-const inter = Inter({
+const cinzel = Cinzel({
   subsets: ['latin'],
+  variable: '--font-display',
   display: 'swap',
+  weight: ['500', '600', '700', '800'],
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -18,7 +27,7 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 90,50 50,95 10,50' fill='%23f59e0b'/></svg>",
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 90,50 50,95 10,50' fill='%23d4af37'/></svg>",
   },
 };
 
@@ -28,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={`${cinzel.variable} ${plusJakarta.variable}`}>
       <body>
         <div className="site-wrapper">
           <header className="site-header">
